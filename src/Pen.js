@@ -77,14 +77,14 @@ class Douglas {
 
 
 
-class Pen implements Drawable {
+export default class Pen implements Drawable {
   list: Array<Point> = [];
 
   add(point: Point) {
     this.list.push(point);
   }
 
-  setContextOptions(ctx: CanvasRenderingContext2D, options = {}) : boolean {
+  setContextOptions(ctx: CanvasRenderingContext2D, options: any = {}) : boolean {
     ctx.shadowOffsetX = options.shadowOffsetX;
     ctx.shadowOffsetY = options.shadowOffsetY;
     ctx.shadowBlur = options.shadowBlur;
@@ -95,7 +95,7 @@ class Pen implements Drawable {
     return true;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D): void {
     const start = this.list[0];
     const len = this.list.length;
     ctx.save()
