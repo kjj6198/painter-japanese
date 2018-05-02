@@ -19,16 +19,18 @@ if (canvas) {
   });
   document.addEventListener('mouseup', () => {
     pressed = false;
-    
+    pen.reformat(ctx);
     localStorage.setItem('points', JSON.stringify(pen.list));
   });
   canvas.addEventListener('mousemove',  (e: MouseEvent) => {
     if (pressed && pen) {
-      pen.add({
-        x: e.pageX - e.target.offsetLeft,
-        y: e.pageY - e.target.offsetTop
-      });
-      pen.draw(ctx);
+      setTimeout(() => {
+        pen.add({
+          x: e.pageX - e.target.offsetLeft,
+          y: e.pageY - e.target.offsetTop
+        });
+        pen.draw(ctx);
+      }, 50);
     }
   });
 }
@@ -38,10 +40,6 @@ const recognition: HTMLElement = document.getElementById('recognition');
 const sendImage = () => {
   const imageData: ImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  fetch('http://localhost:3000', {
-    method: 'POST',
-    body: ctx.canvas.toDataURL(),
-  }).then(console.log);
   
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -50,6 +48,6 @@ const sendImage = () => {
 recognition.addEventListener('click', sendImage);
 window.addEventListener('keyup', (e) => {
   if (e.keyCode === 13) {
-    sendImage(); 
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 })

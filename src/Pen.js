@@ -10,7 +10,7 @@ interface Drawable {
 }
 
 class Douglas {
-  D: number = 500;
+  D: number = 250;
   points: Array<Point> = [];
 
   constructor(points: Array<Point>) {
@@ -90,7 +90,8 @@ export default class Pen implements Drawable {
     ctx.shadowBlur = options.shadowBlur;
     ctx.strokeStyle = options.strokeStyle;
     ctx.globalAlpha = options.opacity / 100;
-    ctx.lineWidth = options.lineWidth || 2;
+    ctx.lineWidth = options.lineWidth || 3;
+    ctx.lineCap = 'round';
 
     return true;
   }
@@ -128,6 +129,7 @@ export default class Pen implements Drawable {
 
     ctx.stroke();
     ctx.restore();
+    
   }
 
 }
