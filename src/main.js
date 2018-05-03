@@ -1,5 +1,20 @@
 // @flow
 import Pen from './Pen';
+import JapaneseDataSet from './dataset';
+import * as model from './model';
+
+const data = new JapaneseDataSet();
+async function load() {
+  await data.load();
+}
+
+async function train() {
+  await load();
+  await model.train(data, console.log);
+}
+
+train();
+
 let pressed = false;
 
 const canvas : HTMLElement | null = document.getElementById('canvas');
@@ -41,7 +56,7 @@ const sendImage = () => {
 }
 
 document.addEventListener('readystatechange', () => {
-  fetch('http://localhost:3000/images/a')
+  fetch('http://localhost:3000/images/all')
   .then((res: Response) => res.arrayBuffer())
   .then((buffer: ArrayBuffer) => {
     const clampedArray: Uint8ClampedArray = new Uint8ClampedArray(buffer);
