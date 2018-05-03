@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     main: './src/main.js',
   },
+  mode: 'development',
   output: {
     path: path.join(__dirname, 'lib'),
     filename: '[name].js',

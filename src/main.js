@@ -19,7 +19,6 @@ if (canvas) {
   });
   document.addEventListener('mouseup', () => {
     pressed = false;
-    pen.reformat(ctx);
     localStorage.setItem('points', JSON.stringify(pen.list));
   });
   canvas.addEventListener('mousemove',  (e: MouseEvent) => {
@@ -39,11 +38,26 @@ const recognition: HTMLElement = document.getElementById('recognition');
 
 const sendImage = () => {
   const imageData: ImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-  
-
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
+
+document.addEventListener('readystatechange', () => {
+  fetch('http://localhost:3000/images/a')
+  .then((res: Response) => res.arrayBuffer())
+  .then((buffer: ArrayBuffer) => {
+    const clampedArray: Uint8ClampedArray = new Uint8ClampedArray(buffer);
+    const IMAGE_SIZE = 150 * 150 * 4; // width * height * channel
+    for (let i = 0; i < clampedArray.length; i += IMAGE_SIZE) {
+      const imageData = new ImageData(clampedArray.slice(i, i + IMAGE_SIZE), 150, 150);
+      const image = document.createElement('canvas');
+      image.width = 150;
+      image.height = 150;
+      const imageCtx = image.getContext('2d');
+      imageCtx.putImageData(imageData, 0, 0);
+      result.appendChild(image);
+    }
+  });
+});
+
 
 recognition.addEventListener('click', sendImage);
 window.addEventListener('keyup', (e) => {

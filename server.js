@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const PNG = require('pngjs').PNG;
 
 const app = express();
@@ -34,6 +35,10 @@ function onRequest(req, res) {
 }
 
 app.listen(3000);
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.post('/', (req, res) => {
   req
@@ -54,22 +59,25 @@ app.post('/', (req, res) => {
     });
 });
 
-app.get('/images/:path', (req, res) => {
-  const { path } = req.params;
-  if (['a', 'i', 'u', 'e', 'o'].includes(path)) {
-    const files = fs.readdirSync(`./images/${path}`);
-    files.forEach(file => {
-      fs.createReadStream(`./images/${path}/939c4.png`)
-        .pipe(new PNG({
-          filterType: 4
-        }))
-        .on('data', chunk => console.log(chunk))
-        .on('parsed', data => {
-          console.log(this.data);
-        })
 
-        
-        
-    });
+
+app.get('/images/:dirpath', (req, res) => {
+  const { dirpath } = req.params;
+  
+  if (['a', 'i', 'u', 'e', 'o'].includes(dirpath)) {
+    const files = fs
+      .readdirSync(`./images/${dirpath}`)
+      .filter(filename => filename !== '.DS_Store');
+
+    Promise.all(files.map(file => {
+      return new Promise(resolve => {
+        fs.createReadStream(`./images/${dirpath}/${file}`)
+        .pipe(new PNG({ filterType: 4 }))
+        .on('parsed', (data) => {
+          resolve(data);
+        });
+      })
+    }))
+    .then(images => res.send(Buffer.concat(images)));
   }
 });
