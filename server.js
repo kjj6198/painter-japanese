@@ -89,7 +89,7 @@ app.get('/images/:dirpath', (req, res) => {
 app.get('/labels', (req, res) => {
   const makeLabels = buildLabels();
   const labels = makeLabels();
-  console.log(Object.keys(labels));
+
   const resultInOrder = Object
     .keys(labels)
     .sort()

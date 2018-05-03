@@ -10,7 +10,8 @@ async function load() {
 
 async function train() {
   await load();
-  await model.train(data, console.log);
+  await model.train(data);
+  await model.showPredictions(data);
 }
 
 train();
@@ -34,7 +35,6 @@ if (canvas) {
   });
   document.addEventListener('mouseup', () => {
     pressed = false;
-    localStorage.setItem('points', JSON.stringify(pen.list));
   });
   canvas.addEventListener('mousemove',  (e: MouseEvent) => {
     if (pressed && pen) {
@@ -55,7 +55,7 @@ const sendImage = () => {
   const imageData: ImageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
-document.addEventListener('readystatechange', () => {
+document.addEventListener('xxxx', () => {
   fetch('http://localhost:3000/images/all')
   .then((res: Response) => res.arrayBuffer())
   .then((buffer: ArrayBuffer) => {

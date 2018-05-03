@@ -74,7 +74,6 @@ export default class JapaneseDataSet {
     }
 
     const xs = tf.tensor2d(batchImages, [batchSize, IMAGE_SIZE]);
-    console.log('hello world');
     const labelsTensor = tf.tensor2d(batchLabels, [batchSize, NUM_CLASS]);
 
     return {
